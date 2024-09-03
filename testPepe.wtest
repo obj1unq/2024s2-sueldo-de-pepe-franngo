@@ -3,8 +3,53 @@ import pepe.*
 describe "Sueldo Pepe" {
 	
 	test "Test 1" {
-		//TODO: Implementame
+		pepe.categoria(cadete);
+		pepe.tipoBonoResultados(montoFijo);
+		pepe.tipoBonoPresentismo(normal);
+		pepe.faltasMensuales(3);
+		assert.equals(20800, pepe.sueldo())
 	}
 
+	test "Test 2" {
+		pepe.categoria(gerente);
+		pepe.tipoBonoResultados(porcentaje);
+		pepe.tipoBonoPresentismo(nulo);
+		assert.equals(16500, pepe.sueldo())
+	}
+
+	test "Test 3" {
+		pepe.categoria(cadete);
+		pepe.tipoBonoResultados(porcentaje);
+		pepe.tipoBonoPresentismo(normal);
+		pepe.faltasMensuales(0);
+		assert.equals(24000, pepe.sueldo())
+	}
+
+	test "Test 4" {
+		pepe.categoria(cadete);
+		pepe.tipoBonoResultados(porcentaje);
+		pepe.tipoBonoPresentismo(normal);
+		pepe.faltasMensuales(1);
+		assert.equals(23000, pepe.sueldo())
+	}
+
+	
+}
+
+describe "Bonus/Sueldo de varios" {
+	
+	test "Test" {
+		medioTiempo.categoriaBase(cadete);
+		pepe.categoria(medioTiempo);
+		pepe.tipoBonoResultados(porcentaje);
+		pepe.tipoBonoPresentismo(demagogico);
+		pepe.faltasMensuales(1);
+		assert.equals(11500, pepe.sueldo()) //SUELDO PEPE
+		roque.tipoBonoResultados(montoFijo);
+		assert.equals(37800, roque.sueldo()); //SUELDO ROQUE
+		ernesto.companhero(pepe);
+		ernesto.tipoBonoPresentismo(ajuste);
+		assert.equals(10100, ernesto.sueldo()); //SUELDO ERNESTO
+	}
 	
 }
