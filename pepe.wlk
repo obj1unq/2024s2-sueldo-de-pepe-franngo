@@ -1,4 +1,7 @@
+//empleados/personas
+
 object pepe {
+
     var categoria = cadete;
     var tipoBonoResultados = porcentaje;
     var tipoBonoPresentismo = normal;
@@ -42,41 +45,91 @@ object pepe {
     }
 }
 
-//la idea es demostrar cómo todos los objetos están relacionados
+object sofia {
+    var categoria = cadete;
+    var tipoBonoResultados = porcentaje;
+    const porcentajeSobreNeto = 1.3; //como es algo que se usa en un cálculo, se lo hace constante para dar claridad al método
 
-//objetos cadete y gerente
-//pepe le termina mandando mensaje a la categoría cuando se usa metodo sueldo()
-//como la categoría está relacionada al neto y es la categoría la que tiene la mayor información sobre cuál es el neto, entonces
-//se le pregunta a la propia categoría cuánto es el neto.
+    method categoria(_categoria) {
+        categoria = _categoria;
+    }
 
-//en la 2da, hacer que el bono interactue con el neto.
+    method tipoBonoResultados(_tipoBonoResultados) {
+        tipoBonoResultados = _tipoBonoResultados;
+    }
 
-//en vez de return categoria.neto() + tipoBonoResultados.bonoResultados() + tipoBonoPresentismo.bonoPresentismo();
-//return self.neto() + self.bonoResultados() + self.bonoPresentismo()
-//ya que ahí el dato te lo da el propio pepe mediante un método. Por tanto, se puede preguntarle con un mensaje a pepe cuál es su
-//neto, su bonoResultados y su bonoPresentismo además del sueldo.
-//esto está mejor así ya que son comportamientos de pepe!
+    method neto() {
+        return categoria.neto() * porcentajeSobreNeto;
+    }
 
-//no tiene sentido hacer métodos como pepe.cadete() que te asigne al atributo categoria el objeto cadete, ya que si tenes 70
-//categorías diferentes, vas a tener que crear 70 métodos distintos.
+    method bonoResultados() {
+        return tipoBonoResultados.bonoResultados(self);
+    }
 
-//tmb estaría re mal preguntarle al objeto quién es (si es igual a tal o cual), y, en base a eso, ejecutar un cierto código.
-//en plan, if(categoria==cadete) { categoria.metodo; }
-//la idea es usar polimorfismo y solo hacer categoria.neto(), y que, gracias al polimorfismo, la categoria correspondiente te
-//devuelva el valor correspondiente mediante la ejecución del metodo neto().
+    method sueldo() {
+        return self.neto() + self.bonoResultados();
+    }
 
-//fijarse de volver parametrizables los métodos de los tipos de bono por resultados y los de los tipos de bono por presentismo,
-//de modo que no solo funcionen en base a pepe, sino en base a cualquier otro empleado.
-//O SEA, evitar el uso de referencias globales fijas y usar parámetros.
-//para esto, TODOS los tipos de bono por resultados y los tipos de bono por presentismo deben recibir un parámetro para no romper
-//el polimorfismo, AUN SI NO LO UTILIZAN. Esto en estructurado estaría mal, pero en objetos no.
-//tmb podría pasar como parámetro la categoría o el neto.
-//la mejor es el empleado porque defino que un bono es algo que se aplica a un empleado (algo que se relaciona directamente al empleado).
+}
 
-//estaría FATAL hacer a neto un atributo y neto = categoria.neto(), ya que eso es precálculo, debido a que, si cambia el valor del
-//atributo neto de la categoría mediante un setter x ej, el atributo neto de pepe va a quedar desactualizado, por lo que, para que no
-//pasara eso, habría que hacer al atributo neto de pepe dependiente del atributo de la categoria, de modo que cada vez que se actualiza
-//ese se debe actualizar el otro.
+object roque {
+
+    //var categoria = cadete; no va porque esto sirve para calcular el neto, y, en este caso, el neto es fijo
+    var tipoBonoResultados = porcentaje;
+    const bonoFijo = 9000; //como es algo que se usa en un cálculo, se lo hace constante para dar claridad al método
+
+    method tipoBonoResultados(_tipoBonoResultados) {
+        tipoBonoResultados = _tipoBonoResultados;
+    }
+
+    method neto() {
+        return 28000;
+    }
+
+    method bonoResultados() {
+        return tipoBonoResultados.bonoResultados(self);
+    }
+
+	method sueldo() {
+        return self.neto() + self.bonoResultados() + bonoFijo;
+    }
+}
+
+object ernesto {
+
+    //var categoria = cadete; No va porque esta nos sirve para calcular el neto, y el neto se obtiene en base a quien tiene por compañero
+    //const faltasMensuales = 0; Ni hace falta porque es una constante que NI SIQUIERA se usa en un cálculo. Solo se retornaría
+    //                           en faltasMensuales(), por lo que me parece mejor simplemente retornar 0 ahí y listo.
+    //                           Tiene sentido declararla cuando es variable y se usa con setter o cuando es constante y se usa en un cálculo,
+    //                           de modo que de mayor claridad al método. Acá NO.
+    var tipoBonoPresentismo = normal;
+    var companhero = pepe;
+
+    method tipoBonoPresentismo(_tipoBonoPresentismo) {
+        tipoBonoPresentismo = _tipoBonoPresentismo;
+    }
+
+    method faltasMensuales() {
+        return 0; //y no hace falta un setter porque siempre es 0 (constante)
+    }
+
+    method companhero(persona) {
+        companhero = persona;
+    }
+
+    method neto() {
+        return companhero.neto(); //aunque sea el neto del compañero, tiene que poder seguir entendiendo el mensaje neto para el polimorfismo
+    }
+
+    method bonoPresentismo() {
+        return tipoBonoPresentismo.bonoPresentismo(self);
+    }
+    //acá podría pasar las faltas sino, ya que se calcula directamente sobre las faltas.
+
+	method sueldo() {
+        return self.neto() + self.bonoPresentismo();
+    }
+}
 
 //categorias (neto)
 
@@ -90,6 +143,39 @@ object cadete {
     method neto() {
         return 20000
     }
+}
+
+object vendedor {
+    var porcentajeAumento = 1;
+
+    method activarAumentoPorMuchasVentas() {
+        porcentajeAumento = 1.25;
+    }
+
+    method desactivarAumentoPorMuchasVentas() {
+        porcentajeAumento = 1;
+    }
+
+    method neto() {
+        return 16000 * porcentajeAumento;
+    }
+}
+
+//medioTiempo es realmente un modificador sobre categorías
+
+object medioTiempo {
+    
+    var categoriaBase = cadete;
+    const descuentoPorMedioTiempo = 2;
+    
+    method categoriaBase(categoria) {
+        categoriaBase = categoria;
+    }
+
+    method neto() {
+        return categoriaBase.neto() / descuentoPorMedioTiempo;
+    }
+
 }
 
 //tipos de bono por resultados

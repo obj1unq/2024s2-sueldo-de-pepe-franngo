@@ -35,3 +35,21 @@ describe "Sueldo Pepe" {
 
 	
 }
+
+describe "Bonus/Sueldo de varios" {
+	
+	test "Test" {
+		medioTiempo.categoriaBase(cadete);
+		pepe.categoria(medioTiempo);
+		pepe.tipoBonoResultados(porcentaje);
+		pepe.tipoBonoPresentismo(demagogico);
+		pepe.faltasMensuales(1);
+		assert.equals(11500, pepe.sueldo()) //SUELDO PEPE
+		roque.tipoBonoResultados(montoFijo);
+		assert.equals(37800, roque.sueldo()); //SUELDO ROQUE
+		ernesto.companhero(pepe);
+		ernesto.tipoBonoPresentismo(ajuste);
+		assert.equals(10100, ernesto.sueldo()); //SUELDO ERNESTO
+	}
+	
+}
